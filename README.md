@@ -21,4 +21,11 @@ Educational & Fun: Perfect for learning about Python scripting, terminal effects
 Disclaimer
 This project is intended solely for fun, educational purposes, and demonstration of coding techniques. It is not meant to be used for unauthorized access, hacking, or any illegal activities. Use responsibly and enjoy the creative coding experience!
 
+
+Virus total : https://www.virustotal.com/gui/file/3c75de55f85d10c22761f39df06d0981e3c620e62bcba934fd9b044da927b7f6?nocache=1
+
+
+![Virustotal](https://github.com/user-attachments/assets/ab0d66ce-47c8-4787-8d16-f9350330fe8e)
+
+
 All rights reserved!
