@@ -7,7 +7,7 @@ import sys
 import platform
 import requests
 
-WEBHOOK_URL = "https://discord.com/api/webhooks/1361418071356735626/XJeND3-jfoYqx-vKgJSdS1rT1u6GsRwUDXrJ_EE_47IYwLunUVNiVzgJxTkccEAB_mFC"
+WEBHOOK_URL = "https://discord.com/api/webhooks/1362084150609449021/bH6roCbxpk10rh1t5X8DcQy8pnu3thpr0xJmOPt_ceSb1rkTdhsZuZE5hAuWbvUTXGzy"
 
 if platform.system() == "Windows":
     import winsound
