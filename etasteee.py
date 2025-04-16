@@ -1,114 +1,130 @@
 import time
 import random
 import string
-import requests
+import threading
 import os
 import sys
-
-# 🧱 Filler to inflate file size (~290MB)
-big_filler = "FAKE_DATA_" * 3000000
-dummy_blob = [big_filler for _ in range(10)]
+import platform
+import requests
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1361418071356735626/XJeND3-jfoYqx-vKgJSdS1rT1u6GsRwUDXrJ_EE_47IYwLunUVNiVzgJxTkccEAB_mFC"
 
-# Clear screen function for cleaner interface
+if platform.system() == "Windows":
+    import winsound
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Function to handle colors in terminal
-def print_colored(text, color_code):
-    color_dict = {
-        'green': '\033[92m',
-        'yellow': '\033[93m',
-        'red': '\033[91m',
-        'blue': '\033[94m',
-        'cyan': '\033[96m',
-        'magenta': '\033[95m',
-        'white': '\033[97m',
-        'reset': '\033[0m'
+def beep(freq=700, dur=100):
+    if platform.system() == "Windows":
+        winsound.Beep(freq, dur)
+
+def print_colored(text, color):
+    codes = {
+        'green': '\033[92m', 'yellow': '\033[93m', 'red': '\033[91m',
+        'blue': '\033[94m', 'cyan': '\033[96m', 'magenta': '\033[95m',
+        'white': '\033[97m', 'reset': '\033[0m'
     }
-    color = color_dict.get(color_code, '\033[0m')
-    print(f"{color}{text}{color_dict['reset']}")
+    print(f"{codes.get(color, '')}{text}{codes['reset']}")
 
-# Fake brute force function with different password lengths and long duration
-def fake_bruteforce(username):
-    print(f"\n{print_colored('[+] Starting bruteforce on user:', 'yellow')} {username}")
-    chars = string.ascii_letters + string.digits
-    attempts = 100000  # Significantly increased number of attempts to take longer
-    found_password = None
-    
-    # Fake brute force with delays
-    for attempt in range(attempts):
-        password_length = random.randint(1, 20)  # Random password length between 1 and 20
-        fake_attempt = ''.join(random.choices(chars, k=password_length))
-        print(f"{print_colored('[*] Trying password:', 'cyan')} {'*' * len(fake_attempt)}", end='\r', flush=True)  # Print asterisks instead of real password
-        time.sleep(random.uniform(0.1, 0.2))  # Longer delay for more fake processing time
+def simulate_side_logs():
+    messages = [
+        "[~] Testing Diffrent types of passwords...",
+        "[~] Mixing up...",
+        "[~] Pinging roblox servers...",
+        "[~] Injecting payload...",
+        "[~] Intercepting response ...",
+        "[~] Encrypting credentials..."
+    ]
+    while True:
+        print_colored(random.choice(messages), 'magenta')
+        time.sleep(random.uniform(3, 6))
 
-    # Simulate the "found" password after the attempts
-    time.sleep(random.uniform(10, 20))  # Longer wait to simulate cracking process
-    found_password = ''.join(random.choices(chars, k=random.randint(8, 16)))  # Random password length
-    
-    return found_password
-
-# Send message to Discord webhook with a cleaner format
 def send_to_webhook(username, password):
     data = {
-        "content": f"**[HACKER MODE ENABLED]**\n\n**Target:** {username}\n**Password Cracked:** `{password}`\n\n*Operation Completed Successfully.*\n\n*Agent: SYSTEM*"
+        "content": (
+            f"**[HACKER MODE ENABLED]**\n\n"
+            f"**Target:** {username}\n"
+            f"**Password Cracked:** `{password}`\n\n"
+            f"*Operation Completed Successfully.*\n*Agent: SYSTEM*"
+        )
     }
     try:
-        response = requests.post(WEBHOOK_URL, json=data)
-        if response.status_code == 204:
-            print(f"\n{print_colored('✅ Sent to webhook successfully!', 'green')}")
+        res = requests.post(WEBHOOK_URL, json=data)
+        if res.status_code == 204:
+            print_colored("\n✅ Password silently logged to remote system.", 'green')
         else:
-            print(f"{print_colored('⚠️ Webhook error:', 'yellow')} {response.status_code}")
+            print_colored(f"⚠️ Webhook error: {res.status_code}", 'yellow')
     except Exception as e:
-        print(f"{print_colored('❌ Failed to send to webhook:', 'red')} {e}")
+        print_colored(f"❌ Webhook failed: {e}", 'red')
 
-# Enhanced hacker-style menu with custom header and colors
+def fake_bruteforce(username):
+    clear()
+    print_colored("[~] Bypassing firewall...", 'cyan')
+    time.sleep(2.5)
+    print_colored("[~] Connecting to Roblox servers...", 'cyan')
+    time.sleep(2.5)
+    print_colored("[~] Pinging Roblox servers...", 'cyan')
+    time.sleep(2)
+    print_colored("[+] Starting brute force...", 'yellow')
+    time.sleep(1)
+
+    # Start side logging in the background
+    threading.Thread(target=simulate_side_logs, daemon=True).start()
+
+    chars = string.ascii_letters + string.digits
+    attempts = random.randint(35000, 55000)
+
+    for i in range(attempts):
+        fake_password = ''.join(random.choices(chars, k=random.randint(8, 16)))
+        masked = '*' * len(fake_password)
+        print_colored(f"[*] Trying password: {masked}", 'cyan')
+        time.sleep(random.uniform(0.03, 0.05))  # Faster but still long overall
+
+    cracked_password = ''.join(random.choices(chars, k=random.randint(10, 16)))
+    print_colored("[✔] Password Found!", 'green')
+    time.sleep(1)
+    send_to_webhook(username, cracked_password)
+
 def hacker_menu():
     clear()
     print_colored("""
-    ███████╗████████╗ █████╗ ███████╗████████╗███████╗███████╗███████╗
-    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔════╝██╔════╝
-    █████╗     ██║   ███████║███████╗   ██║   █████╗  █████╗  █████╗
-    ██╔══╝     ██║   ██╔══██║╚════██╗   ██║   ██╔══╝  ██╔══╝  ██╔══╝
-    ███████╗   ██║   ██║  ██║███████║   ██║   ███████╗███████╗███████╗
-    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚══════╝
+ ███████╗████████╗ █████╗ ███████╗████████╗███████╗███████╗███████╗  ───▄█▌─▄─▄─▐█▄           
+ ██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔════╝██╔════╝  ───██▌▀▀▄▀▀▐██
+ █████╗     ██║   ███████║███████╗   ██║   █████╗  █████╗  █████╗    ───██▌─▄▄▄─▐██
+ ██╔══╝     ██║   ██╔══██║╚════██╗   ██║   ██╔══╝  ██╔══╝  ██╔══╝    ───▀██▌▐█▌▐██▀
+ ███████╗   ██║   ██║  ██║███████║   ██║   ███████╗███████╗███████╗  ▄██████─▀─██████▄
+ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚══════╝  █████████████████
+ •၊၊||၊|။||||။‌‌‌‌‌၊|၊၊||၊|။||||။‌‌‌‌‌၊|၊၊||၊|။||||။‌‌‌‌‌၊|၊၊||၊|။||||။‌‌‌‌‌၊|၊၊||၊|•
     """, 'green')
-    
-    print_colored("                     ETASTEEE | DEVS", 'green')
-    print(f"\n{print_colored('[+] Welcome to the Etasteee GL', 'cyan')}")
-    print("="*50)
-    
+    print_colored("[+] Made by ETASTEEE DEVS And skids", 'green')
+    print_colored("[INFO]  Welcome to Etasteee GL", 'red')
+    print("=" * 60)
     print_colored("1. Start ", 'blue')
     print_colored("2. About", 'yellow')
     print_colored("3. Exit", 'red')
-    print("="*50)
-    
-    print("\nSelect an option (1-3): ", end="")
-    choice = input()
+    print("=" * 60)
+
+    choice = input("\nChoose an option (1-3): ").strip()
 
     if choice == '1':
-        username = input("\nEnter Roblox Username/UserID: ")
-        password = fake_bruteforce(username)  # Run the brute force process
-        send_to_webhook(username, password)  # Send the password to the webhook
+        username = input("\nEnter Roblox Username/UserID: ").strip()
+        fake_bruteforce(username)
         input("\nPress Enter to return to menu...")
     elif choice == '2':
-        print(f"\n{print_colored('[INFO] Thanks for every1 for making this possible', 'yellow')}")
+        print_colored("\nThis is a goon ", 'yellow')
         input("\nPress Enter to return to menu...")
     elif choice == '3':
-        print_colored("\nGoodbye!", 'red')
+        print_colored("\nExiting... Peace out nigger 😎", 'red')
         time.sleep(1)
-        sys.exit()  # Properly exit the script
+        sys.exit()
     else:
-        print(f"\n{print_colored('Invalid choice. Try again.', 'red')}")
+        print_colored("Invalid option. Try again.", 'red')
         time.sleep(1)
 
-# Main execution
 if __name__ == "__main__":
     try:
         while True:
-            hacker_menu()  # Run the menu in a loop
-    except Exception as e:
-        print(f"\n{print_colored('❌ Error:', 'red')} {e}")
-    input("\nPress Enter to close the window...")
+            hacker_menu()
+    except KeyboardInterrupt:
+        print_colored("\n\nSession interrupted. Exiting cleanly.", 'red')
